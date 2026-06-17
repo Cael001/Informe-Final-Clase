@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informe Final de Investigación — UADE</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0d1b2e;
+    --navy-mid: #1a2d47;
+    --blue: #1a6bbd;
+    --blue-light: #3d8fda;
+    --accent: #e8a020;
+    --accent-light: #f5c55a;
+    --green: #1d7a5c;
+    --green-light: #d1f0e3;
+    --red: #c0392b;
+    --red-light: #fde8e6;
+    --gray-bg: #f5f6f8;
+    --gray-border: #dde1e9;
+    --text: #1a1f2e;
+    --text-mid: #4a5568;
+    --text-light: #8494a7;
+    --white: #ffffff;
+    --slide-w: 1280px;
+    --slide-h: 720px;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: #1a1a2e;
+    font-family: 'DM Sans', sans-serif;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  /* ── WRAPPER ── */
+  #app {
+    width: 100vw; height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+
+  /* ── SLIDE STAGE ── */
+  #stage {
+    position: relative;
+    width: var(--slide-w);
+    height: var(--slide-h);
+    transform-origin: top left;
+    overflow: hidden;
+  }
+
+  /* ── SLIDE BASE ── */
+  .slide {
+    position: absolute; inset: 0;
+    display: none;
+    flex-direction: column;
+    background: var(--white);
+  }
+  .slide.active { display: flex; }
+
+  /* ── SLIDE TYPES ── */
+
+  /* Cover */
+  .slide-cover {
+    background: var(--navy);
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 60px 72px;
+  }
+  .slide-cover::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -80px;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(26,107,189,0.35) 0%, transparent 70%);
+  }
+  .slide-cover::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #2ecc71 0%, #1a6bbd 25%, #9b59b6 50%, #e74c3c 75%, #e8a020 100%);
+  }
+  .cover-tag {
+    font-size: 13px; font-weight: 600; letter-spacing: 3px;
+    color: var(--accent); text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .cover-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 64px; line-height: 1.1;
+    color: var(--white);
+    margin-bottom: 28px;
+  }
+  .cover-title em { color: var(--accent-light); font-style: italic; }
+  .cover-sub {
+    font-size: 18px; color: rgba(255,255,255,0.6);
+    font-weight: 300; line-height: 1.6;
+  }
+  .cover-logo {
+    position: absolute; top: 48px; right: 64px;
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px; font-weight: 400;
+    color: var(--white); letter-spacing: 2px;
+  }
+  .cover-num {
+    position: absolute; top: 48px; left: 64px;
+    font-size: 13px; color: rgba(255,255,255,0.35);
+    font-weight: 500; letter-spacing: 1px;
+  }
+
+  /* Section divider */
+  .slide-divider {
+    background: var(--navy-mid);
+    align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .slide-divider::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #2ecc71 0%, #1a6bbd 25%, #9b59b6 50%, #e74c3c 75%, #e8a020 100%);
+  }
+  .divider-num {
+    font-size: 96px; font-weight: 700;
+    color: rgba(255,255,255,0.06);
+    line-height: 1;
+    margin-bottom: -20px;
+  }
+  .divider-label {
+    font-size: 13px; font-weight: 600; letter-spacing: 4px;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .divider-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 52px; color: var(--white);
+    line-height: 1.2;
+  }
+
+  /* Standard content */
+  .slide-content {
+    flex-direction: row;
+  }
+  .slide-sidebar {
+    width: 340px; flex-shrink: 0;
+    background: var(--navy);
+    padding: 52px 40px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .sidebar-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 20px;
+  }
+  .sidebar-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px; color: var(--white);
+    line-height: 1.25; margin-bottom: 16px;
+  }
+  .sidebar-desc {
+    font-size: 14px; color: rgba(255,255,255,0.55);
+    line-height: 1.7; font-weight: 300;
+  }
+  .slide-main {
+    flex: 1;
+    padding: 48px 52px;
+    display: flex; flex-direction: column; justify-content: center;
+    overflow: hidden;
+  }
+
+  /* Full width content */
+  .slide-full {
+    padding: 52px 72px;
+    justify-content: center;
+  }
+  .full-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--blue);
+    margin-bottom: 12px;
+  }
+  .full-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 40px; color: var(--text);
+    margin-bottom: 32px; line-height: 1.2;
+  }
+
+  /* ── COMPONENTS ── */
+
+  .pill {
+    display: inline-block; padding: 4px 12px;
+    border-radius: 20px; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .pill-blue { background: #e3f0fb; color: #0c5494; }
+  .pill-green { background: var(--green-light); color: #0a5940; }
+  .pill-amber { background: #fef3d7; color: #7a4f0a; }
+  .pill-red { background: var(--red-light); color: #8b1f16; }
+  .pill-purple { background: #ede9fc; color: #4a2fa0; }
+
+  /* Definition box */
+  .def-box {
+    background: var(--navy);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .def-box::before {
+    content: '"';
+    position: absolute; top: -10px; left: 16px;
+    font-size: 120px; color: rgba(255,255,255,0.05);
+    font-family: 'DM Serif Display', serif;
+    line-height: 1;
+  }
+  .def-text {
+    font-size: 18px; color: var(--white);
+    line-height: 1.6; font-weight: 300;
+    position: relative;
+  }
+  .def-text strong { color: var(--accent-light); font-weight: 600; }
+  .def-source {
+    margin-top: 10px; font-size: 12px;
+    color: rgba(255,255,255,0.4); font-style: italic;
+    position: relative;
+  }
+
+  /* Bullet list */
+  .bullet-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .bullet-list li {
+    display: flex; align-items: flex-start; gap: 14px;
+    font-size: 15px; color: var(--text); line-height: 1.55;
+  }
+  .bullet-icon {
+    width: 28px; height: 28px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0; margin-top: 1px;
+  }
+  .bullet-list li strong { color: var(--navy); }
+
+  /* Cards grid */
+  .cards-grid {
+    display: grid;
+    gap: 14px;
+  }
+  .cards-grid.col2 { grid-template-columns: 1fr 1fr; }
+  .cards-grid.col3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  .card {
+    background: var(--gray-bg);
+    border: 1px solid var(--gray-border);
+    border-radius: 12px;
+    padding: 20px 22px;
+  }
+  .card-num {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .card-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .card-body { font-size: 13px; color: var(--text-mid); line-height: 1.55; }
+
+  /* Example boxes */
+  .ex-box {
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-top: 12px;
+  }
+  .ex-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .ex-text { font-size: 13px; line-height: 1.6; }
+
+  .ex-good { background: var(--green-light); border-left: 3px solid var(--green); }
+  .ex-good .ex-label { color: #0a5940; }
+  .ex-good .ex-text { color: #1a5a42; }
+
+  .ex-bad { background: var(--red-light); border-left: 3px solid var(--red); }
+  .ex-bad .ex-label { color: #8b1f16; }
+  .ex-bad .ex-text { color: #7a2018; }
+
+  .ex-neutral { background: #eef2f8; border-left: 3px solid var(--blue); }
+  .ex-neutral .ex-label { color: #0c5494; }
+  .ex-neutral .ex-text { color: #2d4a6e; }
+
+  .ex-amber { background: #fef9ee; border-left: 3px solid var(--accent); }
+  .ex-amber .ex-label { color: #7a4f0a; }
+  .ex-amber .ex-text { color: #5c3d08; }
+
+  /* Flow steps */
+  .flow { display: flex; flex-direction: column; gap: 0; }
+  .flow-row {
+    display: flex; align-items: stretch; gap: 16px;
+  }
+  .flow-left {
+    display: flex; flex-direction: column; align-items: center;
+    width: 36px; flex-shrink: 0;
+  }
+  .flow-circle {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
+    border: 2px solid;
+  }
+  .flow-line { width: 2px; flex: 1; min-height: 10px; background: var(--gray-border); }
+  .flow-body { padding-bottom: 18px; flex: 1; }
+  .flow-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; margin-top: 6px; }
+  .flow-desc { font-size: 12px; color: var(--text-mid); line-height: 1.5; }
+
+  /* VS comparison */
+  .vs-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .vs-col { border-radius: 12px; padding: 22px 24px; }
+  .vs-header {
+    font-size: 12px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .vs-good-col { background: #f0faf5; border: 1px solid #a8dfca; }
+  .vs-good-col .vs-header { color: var(--green); }
+  .vs-bad-col { background: #fff5f4; border: 1px solid #f0bab5; }
+  .vs-bad-col .vs-header { color: var(--red); }
+  .vs-item {
+    font-size: 13px; line-height: 1.55;
+    padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .vs-good-col .vs-item { color: #1a5a42; }
+  .vs-bad-col .vs-item { color: #7a2018; }
+  .vs-item:last-child { border-bottom: none; }
+
+  /* Structure list (clickable) */
+  .struct-list { display: flex; flex-direction: column; gap: 8px; }
+  .struct-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--gray-bg); border: 1px solid var(--gray-border);
+    border-radius: 10px; padding: 14px 16px;
+    cursor: pointer; transition: all 0.18s;
+  }
+  .struct-item:hover { background: #eef2fb; border-color: #b3c5e8; }
+  .struct-item.open {
+    background: var(--navy); border-color: var(--navy);
+    box-shadow: 0 4px 20px rgba(13,27,46,0.25);
+  }
+  .struct-num {
+    width: 26px; height: 26px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+    background: var(--navy); color: var(--white);
+    transition: background 0.18s;
+  }
+  .struct-item.open .struct-num { background: var(--accent); color: var(--navy); }
+  .struct-name {
+    font-size: 14px; font-weight: 600; color: var(--text);
+    flex: 1; transition: color 0.18s; margin-top: 3px;
+  }
+  .struct-item.open .struct-name { color: var(--white); }
+  .struct-example {
+    display: none; margin-top: 10px;
+    font-size: 12px; line-height: 1.6;
+    color: rgba(255,255,255,0.7);
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 8px;
+  }
+  .struct-item.open .struct-example { display: block; }
+  .struct-arrow { font-size: 14px; color: var(--text-light); margin-top: 4px; transition: transform 0.2s, color 0.18s; }
+  .struct-item.open .struct-arrow { transform: rotate(180deg); color: rgba(255,255,255,0.5); }
+
+  /* Two-column layout variant */
+  .two-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+
+  /* Big stat */
+  .big-stat { text-align: center; }
+  .big-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 80px; font-weight: 400;
+    line-height: 1;
+  }
+  .big-label { font-size: 14px; color: var(--text-mid); margin-top: 8px; }
+
+  /* Checklist */
+  .check-list { display: flex; flex-direction: column; gap: 10px; }
+  .check-row {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 16px; border-radius: 10px;
+    background: var(--gray-bg); border: 1px solid var(--gray-border);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .check-row:hover { background: #eef2fb; }
+  .check-row.checked { background: #f0faf5; border-color: #a8dfca; }
+  .check-box-el {
+    width: 22px; height: 22px; border-radius: 6px;
+    border: 2px solid var(--gray-border);
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; margin-top: 1px;
+  }
+  .check-row.checked .check-box-el { background: var(--green); border-color: var(--green); }
+  .check-text { font-size: 13px; color: var(--text); line-height: 1.5; flex: 1; }
+  .check-row.checked .check-text { color: var(--text-mid); }
+
+  /* Tip box */
+  .tip-box {
+    background: #fffbf0; border: 1px solid #f5d78e;
+    border-radius: 10px; padding: 16px 20px;
+    display: flex; gap: 12px; align-items: flex-start;
+    margin-top: 16px;
+  }
+  .tip-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .tip-text { font-size: 13px; color: #6b4a08; line-height: 1.6; }
+  .tip-text strong { color: #4a3005; }
+
+  /* Quiz */
+  .quiz-wrap { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-q { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 16px; line-height: 1.5; }
+  .quiz-opt {
+    background: var(--gray-bg); border: 1.5px solid var(--gray-border);
+    border-radius: 10px; padding: 14px 20px;
+    font-size: 14px; color: var(--text);
+    cursor: pointer; text-align: left;
+    transition: all 0.15s; width: 100%;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .quiz-opt:hover { background: #eef2fb; border-color: #b3c5e8; }
+  .quiz-opt.correct { background: #f0faf5; border-color: var(--green); color: #1a5a42; font-weight: 500; }
+  .quiz-opt.wrong { background: var(--red-light); border-color: var(--red); color: #8b1f16; }
+  .quiz-opt.dim { opacity: 0.4; pointer-events: none; }
+  .quiz-feedback {
+    margin-top: 14px; padding: 14px 18px;
+    border-radius: 10px; font-size: 13px; line-height: 1.6;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: var(--green-light); color: #0a5940; }
+  .quiz-feedback.ko { background: var(--red-light); color: #8b1f16; }
+
+  /* Progress & controls */
+  #controls {
+    position: fixed;
+    bottom: 20px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 100px;
+    padding: 8px 16px;
+  }
+  .ctrl-btn {
+    width: 38px; height: 38px; border-radius: 50%;
+    border: none; background: rgba(255,255,255,0.15);
+    color: white; font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .ctrl-btn:hover { background: rgba(255,255,255,0.3); }
+  .ctrl-btn:disabled { opacity: 0.25; pointer-events: none; }
+  #slideCounter {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; color: rgba(255,255,255,0.7);
+    min-width: 72px; text-align: center; letter-spacing: 0.5px;
+  }
+  #progressPills { display: flex; gap: 5px; align-items: center; }
+  .ppill {
+    height: 4px; border-radius: 2px;
+    background: rgba(255,255,255,0.25);
+    transition: all 0.2s; cursor: pointer;
+  }
+  .ppill.active { background: #e8a020; width: 20px !important; }
+  .ppill.done { background: rgba(255,255,255,0.6); }
+
+  /* Kbd hint */
+  #keyhint {
+    position: fixed; bottom: 80px; right: 28px;
+    font-size: 11px; color: rgba(255,255,255,0.3);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* SLIDE NUMBER badge */
+  .slide-badge {
+    position: absolute; top: 28px; right: 36px;
+    font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
+    color: var(--text-light);
+  }
+  .slide-cover .slide-badge, .slide-divider .slide-badge { color: rgba(255,255,255,0.3); }
+
+  /* horizontal rule */
+  .hr { height: 1px; background: var(--gray-border); margin: 16px 0; }
+
+  /* tag row */
+  .tag-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+
+  /* Highlight span */
+  mark { background: #fff3cd; padding: 1px 5px; border-radius: 4px; color: #7a4a00; }
+
+  /* Responsive scaling */
+  @media screen {
+    #stage { box-shadow: 0 20px 80px rgba(0,0,0,0.6); }
+  }
+
+  .accent-bar {
+    height: 4px;
+    background: linear-gradient(90deg, #2ecc71 0%, #1a6bbd 25%, #9b59b6 50%, #e74c3c 75%, #e8a020 100%);
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="stage">
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 1 — COVER
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-cover active" id="s1">
+      <div class="cover-logo">UADE</div>
+      <div class="cover-num">Investigación de Mercados</div>
+      <div class="cover-tag">Clase 8 — Módulo Final</div>
+      <div class="cover-title">El <em>informe final</em><br>de investigación</div>
+      <div class="cover-sub">
+        Cómo comunicar lo que investigamos de manera efectiva,<br>
+        profesional y orientada a la toma de decisiones.
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 2 — AGENDA
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-full" id="s2">
+      <div class="slide-badge">2 / 22</div>
+      <div class="accent-bar" style="position:absolute;top:0;left:0;right:0;"></div>
+      <div class="full-label">Agenda de hoy</div>
+      <div class="full-title">¿Qué vamos a ver?</div>
+      <div class="cards-grid col3">
+        <div class="card" style="border-top: 3px solid #1a6bbd;">
+          <div class="card-num" style="color:#1a6bbd;">Parte 1</div>
+          <div class="card-title">¿Por qué importa el informe?</div>
+          <div class="card-body">El informe como producto tangible de la investigación. Por qué puede hundir o salvar un trabajo excelente.</div>
+        </div>
+        <div class="card" style="border-top: 3px solid #1d7a5c;">
+          <div class="card-num" style="color:#1d7a5c;">Parte 2</div>
+          <div class="card-title">Preparación y estructura</div>
+          <div class="card-body">El proceso paso a paso. Qué hacer antes de escribir. Cómo estructurar el informe escrito.</div>
+        </div>
+        <div class="card" style="border-top: 3px solid #e8a020;">
+          <div class="card-num" style="color:#e8a020;">Parte 3</div>
+          <div class="card-title">Redacción y presentación oral</div>
+          <div class="card-body">Los 6 principios de redacción. Formato de la presentación oral. Ejercicio práctico.</div>
+        </div>
+      </div>
+      <div class="tip-box" style="margin-top: 20px;">
+        <div class="tip-icon">📌</div>
+        <div class="tip-text">Caso de hoy: <strong>"Heladería Fresca"</strong> — Una cadena de heladerías quiere entender por qué sus ventas caen un 40% en invierno. Usaremos su investigación para ejemplificar cada punto.</div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 3 — DIVIDER PARTE 1
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-divider" id="s3">
+      <div class="slide-badge">3 / 22</div>
+      <div class="divider-num">01</div>
+      <div class="divider-label">Primera parte</div>
+      <div class="divider-title">¿Por qué el informe<br>final es tan importante?</div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 4 — DEFINICIÓN
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-content" id="s4">
+      <div class="slide-sidebar">
+        <div class="sidebar-label">Definición</div>
+        <div class="sidebar-title">El informe final</div>
+        <div class="sidebar-desc">Es el único producto tangible que el cliente recibe de meses de trabajo de investigación.</div>
+      </div>
+      <div class="slide-main">
+        <div class="slide-badge" style="color: var(--text-light);">4 / 22</div>
+        <div class="def-box">
+          <div class="def-text">
+            "Presentación escrita y/u oral del <strong>proceso, los resultados, las recomendaciones y las conclusiones</strong> de la investigación."
+          </div>
+          <div class="def-source">— Malhotra (2016), Investigación de mercados: conceptos esenciales</div>
+        </div>
+        <ul class="bullet-list">
+          <li>
+            <div class="bullet-icon" style="background:#e3f0fb;">📦</div>
+            <span>Es el <strong>único producto tangible</strong> que queda en manos del cliente después de toda la investigación.</span>
+          </li>
+          <li>
+            <div class="bullet-icon" style="background:#fef3d7;">🧭</div>
+            <span>Las <strong>decisiones de negocio</strong> se toman basándose en el informe — no en el trabajo de campo que el cliente no vio.</span>
+          </li>
+          <li>
+            <div class="bullet-icon" style="background:#ede9fc;">👔</div>
+            <span>Los gerentes <strong>evalúan la calidad de toda la investigación</strong> a partir de cómo está presentado el informe.</span>
+          </li>
+          <li>
+            <div class="bullet-icon" style="background:var(--green-light);">🔄</div>
+            <span>La decisión de <strong>contratar futuras investigaciones</strong> depende de la utilidad percibida del informe.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 5 — CASO PRÁCTICO INTRODUCCIÓN
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-full" id="s5">
+      <div class="slide-badge">5 / 22</div>
+      <div class="accent-bar" style="position:absolute;top:0;left:0;right:0;"></div>
+      <div class="full-label">Para pensar en clase</div>
+      <div class="full-title">¿Qué pasaría si...?</div>
+      <div class="two-panel">
+        <div>
+          <div class="ex-box ex-neutral">
+            <div class="ex-label">🎓 Escenario A</div>
+            <div class="ex-text">
+              Investigaste durante 3 meses a 400 consumidores de Heladería Fresca. Encontraste que el 68% no consume helado en invierno porque lo percibe como "producto de verano". Pero tu informe está mal organizado, sin gráficos, con párrafos interminables y sin conclusiones claras.
+            </div>
+          </div>
+          <div class="ex-box ex-bad" style="margin-top: 12px;">
+            <div class="ex-label">❌ Resultado probable</div>
+            <div class="ex-text">El CEO de Heladería Fresca no entiende qué hacer. No lanza ninguna campaña. Tu agencia pierde el próximo contrato.</div>
+          </div>
+        </div>
+        <div>
+          <div class="ex-box ex-neutral">
+            <div class="ex-label">🎓 Escenario B</div>
+            <div class="ex-text">
+              Mismos datos. Misma investigación. Pero el informe tiene un resumen ejecutivo de 1 página, gráficos claros, y en la última sección dice: "Recomendamos lanzar la campaña 'Heladería de invierno' con estos 3 sabores cálidos."
+            </div>
+          </div>
+          <div class="ex-box ex-good" style="margin-top: 12px;">
+            <div class="ex-label">✅ Resultado probable</div>
+            <div class="ex-text">El CEO implementa las recomendaciones en 2 semanas. Te llaman al año siguiente para un nuevo proyecto.</div>
+          </div>
+        </div>
+      </div>
+      <div class="tip-box">
+        <div class="tip-icon">💡</div>
+        <div class="tip-text"><strong>La conclusión:</strong> el informe no es un trámite final. Es el momento donde toda la investigación cobra valor — o lo pierde.</div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 6 — DIVIDER PARTE 2
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-divider" id="s6">
+      <div class="slide-badge">6 / 22</div>
+      <div class="divider-num">02</div>
+      <div class="divider-label">Segunda parte</div>
+      <div class="divider-title">Preparación y<br>estructura del informe</div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 7 — PROCESO / FLUJO
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-content" id="s7">
+      <div class="slide-sidebar">
+        <div class="sidebar-label">El proceso</div>
+        <div class="sidebar-title">7 pasos para preparar el informe</div>
+        <div class="sidebar-desc">El informe no aparece de la nada. Es el resultado de un proceso secuencial que empieza mucho antes de escribir.</div>
+        <div class="tip-box" style="margin-top: 20px; background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15);">
+          <div class="tip-icon">⚠️</div>
+          <div class="tip-text" style="color: rgba(255,255,255,0.65);">Antes de redactar: reunirse con los <strong style="color:var(--accent-light);">tomadores de decisión</strong> para validar resultados.</div>
+        </div>
+      </div>
+      <div class="slide-main" style="padding: 36px 48px;">
+        <div class="slide-badge" style="color:var(--text-light);">7 / 22</div>
+        <div class="flow">
+          <div class="flow-row">
+            <div class="flow-left"><div class="flow-circle" style="background:#e3f0fb;border-color:#1a6bbd;color:#1a6bbd;">1</div><div class="flow-line"></div></div>
+            <div class="flow-body"><div class="flow-name">Definición del problema, enfoque y trabajo de campo</div><div class="flow-desc">Todo el proceso previo de investigación ya está hecho.</div></div>
+          </div>
+          <div class="flow-row">
+            <div class="flow-left"><div class="flow-circle" style="background:var(--green-light);border-color:var(--green);color:var(--green);">2</div><div class="flow-line"></div></div>
+            <div class="flow-body"><div class="flow-name">Análisis de los datos</div><div class="flow-desc">Tablas, cruces de variables, estadísticas descriptivas.</div></div>
+          </div>
+          <div class="flow-row">
+            <div class="flow-left"><div class="flow-circle" style="background:#fef3d7;border-color:#e8a020;color:#ba7f10;">3</div><div class="flow-line"></div></div>
+            <div class="flow-body"><div class="flow-name">Interpretación, conclusiones y recomendaciones</div><div class="flow-desc">¿Qué significan los datos? ¿Qué debería hacer el cliente?</div></div>
+          </div>
+          <div class="flow-row">
+            <div class="flow-left"><div class="flow-circle" style="background:#ede9fc;border-color:#6c5ce7;color:#4a2fa0;">4</div><div class="flow-line"></div></div>
+            <div class="flow-body"><div class="flow-name">Preparación del informe escrito</div><div class="flow-desc">Redacción del documento formal con todos sus componentes.</div></div>
+          </div>
+          <div class="flow-row">
+            <div class="flow-left"><div class="flow-circle" style="background:#fde8e6;border-color:#c0392b;color:#c0392b;">5</div><div class="flow-line"></div></div>
+            <div class="flow-body"><div class="flow-name">Presentación oral</div><div class="flow-desc">Exposición ante el cliente y stakeholders.</div></div>
+          </div>
+          <div class="flow-row">
+            <div class="flow-left"><div class="flow-circle" style="background:#f0f4ff;border-color:#3d5afe;color:#3d5afe;">6</div><div class="flow-line"></div></div>
+            <div class="flow-body"><div class="flow-name">Lectura del informe por el cliente</div><div class="flow-desc">El cliente lee en detalle y consulta dudas.</div></div>
+          </div>
+          <div class="flow-row">
+            <div class="flow-left"><div class="flow-circle" style="background:#f5f6f8;border-color:#8494a7;color:#8494a7;">7</div></div>
+            <div class="flow-body"><div class="flow-name">Seguimiento de la investigación</div><div class="flow-desc">Se cierra el ciclo; se planifican acciones.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 8 — ANTES DE REDACTAR
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-full" id="s8">
+      <div class="slide-badge">8 / 22</div>
+      <div class="accent-bar" style="position:absolute;top:0;left:0;right:0;"></div>
+      <div class="full-label">Antes de escribir una sola palabra</div>
+      <div class="full-title">El informe debe interpretar 4 cosas a la vez</div>
+      <div class="cards-grid col2" style="gap: 16px;">
+        <div class="card" style="border-left: 4px solid #1a6bbd;">
+          <div class="card-num" style="color:#1a6bbd;">① Resultados</div>
+          <div class="card-title">Los datos en contexto del problema</div>
+          <div class="card-body">No alcanza con decir "el 68% respondió X". Hay que decir qué significa ese 68% para el negocio de Heladería Fresca.</div>
+          <div class="ex-box ex-neutral" style="margin-top:10px;">
+            <div class="ex-label" style="font-size:10px;">📝 Ejemplo</div>
+            <div class="ex-text">"El 68% no consume helado en invierno por percepción estacional — esto representa una oportunidad de mercado no explotada."</div>
+          </div>
+        </div>
+        <div class="card" style="border-left: 4px solid #1d7a5c;">
+          <div class="card-num" style="color:#1d7a5c;">② El enfoque</div>
+          <div class="card-title">Las hipótesis y preguntas de investigación</div>
+          <div class="card-body">¿Se confirmaron o rechazaron las hipótesis originales? ¿Las preguntas de investigación obtuvieron respuesta?</div>
+          <div class="ex-box ex-good" style="margin-top:10px;">
+            <div class="ex-label" style="font-size:10px;">✅ Hipótesis confirmada</div>
+            <div class="ex-text">"Se confirma H1: el helado es percibido como producto estacional por el 62% de los encuestados."</div>
+          </div>
+        </div>
+        <div class="card" style="border-left: 4px solid #e8a020;">
+          <div class="card-num" style="color:#e8a020;">③ Diseño de investigación</div>
+          <div class="card-title">Cómo y por qué se hizo así</div>
+          <div class="card-body">Justificar las decisiones metodológicas: tipo de encuesta, tamaño de muestra, período de campo.</div>
+        </div>
+        <div class="card" style="border-left: 4px solid #9b59b6;">
+          <div class="card-num" style="color:#9b59b6;">④ Trabajo de campo</div>
+          <div class="card-title">Cómo se recolectaron los datos</div>
+          <div class="card-body">Descripción del proceso: encuestadores, plataformas usadas, control de calidad, tasa de respuesta.</div>
+        </div>
+      </div>
+      <div class="tip-box">
+        <div class="tip-icon">💡</div>
+        <div class="tip-text"><strong>Clave:</strong> Antes de redactar, analizar resultados con los tomadores de decisión para que el informe responda exactamente lo que el cliente necesita saber.</div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 9 — ESTRUCTURA ESCRITA (interactiva)
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-full" id="s9">
+      <div class="slide-badge">9 / 22</div>
+      <div class="accent-bar" style="position:absolute;top:0;left:0;right:0;"></div>
+      <div class="full-label">Formato del informe escrito</div>
+      <div class="full-title" style="margin-bottom:16px;">Las 11 secciones — hacé clic para ver el ejemplo</div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;" id="structGrid">
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 10 — ESTRUCTURA PARTE 2
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-full" id="s10">
+      <div class="slide-badge">10 / 22</div>
+      <div class="accent-bar" style="position:absolute;top:0;left:0;right:0;"></div>
+      <div class="full-label">Detalle de secciones clave</div>
+      <div class="full-title" style="margin-bottom:20px;">Las secciones que más se descuidan</div>
+      <div class="two-panel">
+        <div>
+          <div style="font-size:15px; font-weight:600; color:var(--text); margin-bottom:12px;">📄 Resumen ejecutivo</div>
+          <div class="ex-box ex-neutral">
+            <div class="ex-label">¿Qué es?</div>
+            <div class="ex-text">Es lo PRIMERO que leerá el CEO. No debería superar 2 páginas. Describe el problema, el enfoque, los resultados principales y las recomendaciones.</div>
+          </div>
+          <div class="ex-box ex-bad" style="margin-top: 10px;">
+            <div class="ex-label">❌ Error común</div>
+            <div class="ex-text">Escribir el resumen al principio, antes de terminar el informe. Se escribe AL FINAL, aunque va primero.</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:15px; font-weight:600; color:var(--text); margin-bottom:12px;">⚠️ Limitaciones y conclusiones</div>
+          <div class="ex-box ex-amber">
+            <div class="ex-label">Limitaciones — Ejemplo Heladería Fresca</div>
+            <div class="ex-text">"La muestra excluye zonas rurales. Los resultados son representativos de CABA y GBA pero no se pueden extrapolar al interior del país."</div>
+          </div>
+          <div class="ex-box ex-good" style="margin-top: 10px;">
+            <div class="ex-label">✅ Conclusión bien escrita</div>
+            <div class="ex-text">"El principal obstáculo para el consumo invernal es la percepción estacional (45%). Se recomienda una campaña de reposicionamiento con 3 sabores cálidos antes del 1 de junio."</div>
+          </div>
+          <div class="tip-box" style="margin-top:10px;">
+            <div class="tip-icon">💡</div>
+            <div class="tip-text">Las <strong>limitaciones no son una debilidad</strong>: son honestidad profesional que aumenta la credibilidad.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 11 — DIVIDER PARTE 3
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-divider" id="s11">
+      <div class="slide-badge">11 / 22</div>
+      <div class="divider-num">03</div>
+      <div class="divider-label">Tercera parte</div>
+      <div class="divider-title">Cómo redactar bien<br>y presentar oralmente</div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 12 — PRINCIPIOS REDACCIÓN
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-full" id="s12">
+      <div class="slide-badge">12 / 22</div>
+      <div class="accent-bar" style="position:absolute;top:0;left:0;right:0;"></div>
+      <div class="full-label">Redacción del informe</div>
+      <div class="full-title" style="margin-bottom:20px;">6 principios que todo buen informe debe tener</div>
+      <div class="cards-grid col3" style="gap: 12px;">
+        <div class="card" style="border-top: 3px solid #1a6bbd; padding: 16px 18px;">
+          <div class="card-num" style="color:#1a6bbd;">Principio 1</div>
+          <div class="card-title">Conocé a tus lectores</div>
+          <div class="card-body">¿CEO o equipo técnico? Adaptá el nivel de detalle y el vocabulario. Un gerente no quiere saber qué es un p-value.</div>
+        </div>
+        <div class="card" style="border-top: 3px solid #1d7a5c; padding: 16px 18px;">
+          <div class="card-num" style="color:#1d7a5c;">Principio 2</div>
+          <div class="card-title">Estructura lógica y oraciones cortas</div>
+          <div class="card-body">Un párrafo = una idea. Punto. No más de 3 líneas por oración. Usá subtítulos para que sea navegable.</div>
+        </div>
+        <div class="card" style="border-top: 3px solid #e8a020; padding: 16px 18px;">
+          <div class="card-num" style="color:#e8a020;">Principio 3</div>
+          <div class="card-title">Apariencia profesional</div>
+          <div class="card-body">Numeración de páginas, fuente consistente, márgenes. Un informe prolijo genera confianza antes de leer la primera línea.</div>
+        </div>
+        <div class="card" style="border-top: 3px solid #9b59b6; padding: 16px 18px;">
+          <div class="card-num" style="color:#9b59b6;">Principio 4</div>
+          <div class="card-title">Sin sesgo</div>
+          <div class="card-body">Reportá lo que encontraste aunque no sea lo que el cliente quería escuchar. Tu credibilidad depende de la objetividad.</div>
+        </div>
+        <div class="card" style="border-top: 3px solid #e74c3c; padding: 16px 18px;">
+          <div class="card-num" style="color:#e74c3c;">Principio 5</div>
+          <div class="card-title">Recursos visuales</div>
+          <div class="card-body">Una buena tabla o gráfico comunica en segundos lo que 3 párrafos no logran. Siempre títulá tablas y gráficos.</div>
+        </div>
+        <div class="card" style="border-top: 3px solid #2ecc71; padding: 16px 18px;">
+          <div class="card-num" style="color:#1d7a5c;">Principio 6</div>
+          <div class="card-title">Breve y conciso</div>
+          <div class="card-body">Más páginas ≠ más calidad. Significa que no supiste sintetizar. El resumen ejecutivo no debería superar 2 páginas.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 13 — BIEN vs MAL (comparación)
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-content" id="s13">
+      <div class="slide-sidebar">
+        <div class="sidebar-label">Comparación</div>
+        <div class="sidebar-title">Cómo NO y cómo SÍ escribir un informe</div>
+        <div class="sidebar-desc">Los mismos datos, redactados de dos formas distintas. Una es profesional. La otra, no.</div>
+        <div style="margin-top: 24px;">
+          <div class="pill pill-amber" style="margin-bottom: 8px; display: block; width: fit-content;">Caso: Heladería Fresca</div>
+          <div class="sidebar-desc">Resultado del estudio: la mayoría de los encuestados no compra helado en invierno.</div>
+        </div>
+      </div>
+      <div class="slide-main">
+        <div class="slide-badge" style="color:var(--text-light);">13 / 22</div>
+        <div class="ex-box ex-bad" style="margin-bottom: 16px;">
+          <div class="ex-label">❌ Versión mal redactada</div>
+          <div class="ex-text" style="font-size: 14px; line-height: 1.7;">
+            "Habiendo procedido al exhaustivo análisis estadístico de los datos recolectados mediante el instrumento de medición tipo cuestionario aplicado a la muestra seleccionada mediante metodología probabilística sistemática estratificada por zona geográfica, se puede observar que en términos porcentuales el 68% de los sujetos de la muestra manifiesta que no procede a la adquisición del producto durante el período invernal por razones de índole perceptual relacionadas con la estacionalidad del mismo..."
+          </div>
+        </div>
+        <div class="ex-box ex-good">
+          <div class="ex-label">✅ Versión bien redactada</div>
+          <div class="ex-text" style="font-size: 14px; line-height: 1.7;">
+            "El 68% de los consumidores encuestados no compra helado en invierno. La principal razón es la percepción de que el helado es un producto exclusivamente estival (45%). Esta barrera representa la mayor oportunidad de mercado para Heladería Fresca."
+          </div>
+        </div>
+        <div class="tip-box">
+          <div class="tip-icon">🔑</div>
+          <div class="tip-text">Mismos datos. La diferencia: <strong>oraciones cortas, sin tecnicismos innecesarios y orientadas al problema del cliente.</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 14 — INFORME ORAL
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-full" id="s14">
+      <div class="slide-badge">14 / 22</div>
+      <div class="accent-bar" style="position:absolute;top:0;left:0;right:0;"></div>
+      <div class="full-label">Formato del informe oral</div>
+      <div class="full-title" style="margin-bottom: 20px;">¿Qué va en la presentación y en qué orden?</div>
+      <div class="two-panel">
+        <div class="check-list" id="oralChecklist">
+          <div class="check-row" onclick="toggleCheckRow(this)">
+            <div class="check-box-el"></div>
+            <div class="check-text"><strong>1. Portada</strong> — Nombre del proyecto, empresa, fecha y equipo</div>
+          </div>
+          <div class="check-row" onclick="toggleCheckRow(this)">
+            <div class="check-box-el"></div>
+            <div class="check-text"><strong>2. Introducción</strong> — Contexto: por qué se hizo esta investigación</div>
+          </div>
+          <div class="check-row" onclick="toggleCheckRow(this)">
+            <div class="check-box-el"></div>
+            <div class="check-text"><strong>3. Objetivo general</strong> — La pregunta central que guía toda la investigación</div>
+          </div>
+          <div class="check-row" onclick="toggleCheckRow(this)">
+            <div class="check-box-el"></div>
+            <div class="check-text"><strong>4. Objetivos específicos</strong> — Los sub-temas que se exploraron</div>
+          </div>
+          <div class="check-row" onclick="toggleCheckRow(this)">
+            <div class="check-box-el"></div>
+            <div class="check-text"><strong>5. Metodología</strong> — Tipo de estudio, instrumento y período de campo</div>
+          </div>
+          <div class="check-row" onclick="toggleCheckRow(this)">
+            <div class="check-box-el"></div>
+            <div class="check-text"><strong>6. Perfil de la muestra</strong> — Quiénes son los encuestados</div>
+          </div>
+          <div class="check-row" onclick="toggleCheckRow(this)">
+            <div class="check-box-el"></div>
+            <div class="check-text"><strong>7. Resultados</strong> — Los hallazgos con gráficos, uno por diapositiva</div>
+          </div>
+          <div class="check-row" onclick="toggleCheckRow(this)">
+            <div class="check-box-el"></div>
+            <div class="check-text"><strong>8. Conclusiones y recomendaciones</strong> — Qué hacer con lo que se encontró</div>
+          </div>
+        </div>
+        <div>
+          <div class="ex-box ex-good">
+            <div class="ex-label">✅ Regla de oro para las slides</div>
+            <div class="ex-text"><strong>1 idea por diapositiva.</strong> Si tenés más de 5 líneas de texto, es un documento, no una presentación. El texto en las slides es un guía para el orador, no un guión completo.</div>
+          </div>
+          <div class="ex-box ex-amber" style="margin-top: 12px;">
+            <div class="ex-label">🛠️ Herramientas sugeridas</div>
+            <div class="ex-text"><strong>Canva, Prezi, Genially, PowerPoint.</strong> Elegí la que mejor conozcas. Lo importante: diseño limpio, gráficos claros, coherencia visual.</div>
+          </div>
+          <div class="ex-box ex-neutral" style="margin-top: 12px;">
+            <div class="ex-label">💡 Diferencia con el informe escrito</div>
+            <div class="ex-text">El informe escrito es el <strong>documento de referencia</strong>. La presentación oral es el <strong>momento de convencer</strong>. Son complementarios, no uno copia del otro.</div>
+          </div>
+          <div style="margin-top: 12px; font-size: 12px; color: var(--text-light);">↑ Marcá cada sección mientras la explican</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 15 — DIVIDER PRÁCTICA
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-divider" id="s15">
+      <div class="slide-badge">15 / 22</div>
+      <div class="divider-num">✦</div>
+      <div class="divider-label">Parte práctica</div>
+      <div class="divider-title">De datos sueltos<br>a decisiones de negocio</div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 16 — RESULTADO / CONCLUSIÓN / RECOMENDACIÓN
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-full" id="s16">
+      <div class="slide-badge">16 / 22</div>
+      <div class="accent-bar" style="position:absolute;top:0;left:0;right:0;"></div>
+      <div class="full-label">La diferencia clave del informe</div>
+      <div class="full-title" style="margin-bottom: 20px;">Resultado ≠ conclusión ≠ recomendación</div>
+      <div class="cards-grid col3" style="gap: 16px;">
+        <div class="card" style="border-top: 4px solid #1a6bbd;">
+          <div class="card-num" style="color:#1a6bbd;">1 · Resultado</div>
+          <div class="card-title">Qué dicen los datos</div>
+          <div class="card-body">Es el hallazgo objetivo, expresado con cifras. No interpreta todavía.</div>
+          <div class="ex-box ex-neutral" style="margin-top:12px;">
+            <div class="ex-label">Ejemplo</div>
+            <div class="ex-text">El 68% de los consumidores no compra helado en invierno.</div>
+          </div>
+        </div>
+        <div class="card" style="border-top: 4px solid #e8a020;">
+          <div class="card-num" style="color:#e8a020;">2 · Conclusión</div>
+          <div class="card-title">Qué significa</div>
+          <div class="card-body">Conecta el dato con el problema de negocio. Explica la implicancia.</div>
+          <div class="ex-box ex-amber" style="margin-top:12px;">
+            <div class="ex-label">Ejemplo</div>
+            <div class="ex-text">El principal freno no es el producto, sino la percepción estacional del consumo.</div>
+          </div>
+        </div>
+        <div class="card" style="border-top: 4px solid #1d7a5c;">
+          <div class="card-num" style="color:#1d7a5c;">3 · Recomendación</div>
+          <div class="card-title">Qué debería hacerse</div>
+          <div class="card-body">Propone una acción concreta, viable y conectada con la evidencia.</div>
+          <div class="ex-box ex-good" style="margin-top:12px;">
+            <div class="ex-label">Ejemplo</div>
+            <div class="ex-text">Lanzar una campaña de reposicionamiento: “Heladería de invierno”.</div>
+          </div>
+        </div>
+      </div>
+      <div class="tip-box">
+        <div class="tip-icon">🔑</div>
+        <div class="tip-text"><strong>Idea central:</strong> un informe débil se queda en resultados. Un informe profesional llega a conclusiones y recomendaciones accionables.</div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 17 — TALLER RCR
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-full" id="s17">
+      <div class="slide-badge">17 / 22</div>
+      <div class="accent-bar" style="position:absolute;top:0;left:0;right:0;"></div>
+      <div class="full-label">Ejercicio en clase · 15 minutos</div>
+      <div class="full-title" style="margin-bottom: 18px;">Convertir datos en decisiones</div>
+      <div class="two-panel">
+        <div>
+          <div class="ex-box ex-neutral">
+            <div class="ex-label">Datos de Heladería Fresca</div>
+            <div class="ex-text" style="font-size:14px; line-height:1.8;">
+              • 68% no compra helado en invierno.<br>
+              • 45% lo percibe como producto de verano.<br>
+              • 52% probaría sabores “cálidos” o especiados.<br>
+              • 47% compraría helado combinado con café.<br>
+              • 38% compraría si existieran promociones por temporada.
+            </div>
+          </div>
+          <div class="tip-box" style="margin-top: 12px;">
+            <div class="tip-icon">⏱️</div>
+            <div class="tip-text">Trabajo en grupos: elijan <strong>dos datos</strong> y conviértanelos en conclusión + recomendación.</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:14px; font-weight:600; color:var(--text); margin-bottom:12px;">Completar por grupo</div>
+          <div class="card" style="margin-bottom:10px; border-left:4px solid #1a6bbd;">
+            <div class="card-num" style="color:#1a6bbd;">Resultado seleccionado</div>
+            <div class="card-body" style="font-style:italic; color:var(--text-light);">Escriban el dato exacto con porcentaje.</div>
+          </div>
+          <div class="card" style="margin-bottom:10px; border-left:4px solid #e8a020;">
+            <div class="card-num" style="color:#e8a020;">Conclusión</div>
+            <div class="card-body" style="font-style:italic; color:var(--text-light);">¿Qué significa ese dato para el negocio?</div>
+          </div>
+          <div class="card" style="border-left:4px solid #1d7a5c;">
+            <div class="card-num" style="color:#1d7a5c;">Recomendación</div>
+            <div class="card-body" style="font-style:italic; color:var(--text-light);">¿Qué acción concreta debería tomar la empresa?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 18 — GUERRA DE GRÁFICOS
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-full" id="s18">
+      <div class="slide-badge">18 / 22</div>
+      <div class="accent-bar" style="position:absolute;top:0;left:0;right:0;"></div>
+      <div class="full-label">Visualización de datos</div>
+      <div class="full-title" style="margin-bottom: 18px;">El gráfico se elige según la pregunta</div>
+      <div class="cards-grid col3" style="gap: 14px;">
+        <div class="card" style="border-top:4px solid #1a6bbd;">
+          <div class="card-num" style="color:#1a6bbd;">Barras</div>
+          <div class="card-title">Comparar categorías</div>
+          <div class="card-body">Ideal para comparar motivos de no compra, canales de venta o segmentos.</div>
+          <div class="ex-box ex-neutral" style="margin-top:10px;"><div class="ex-label">Usar para</div><div class="ex-text">Motivos de no consumo invernal: estacionalidad, frío, precio, dieta.</div></div>
+        </div>
+        <div class="card" style="border-top:4px solid #1d7a5c;">
+          <div class="card-num" style="color:#1d7a5c;">Línea</div>
+          <div class="card-title">Mostrar evolución</div>
+          <div class="card-body">Útil cuando hay una variable temporal: meses, semanas, años.</div>
+          <div class="ex-box ex-good" style="margin-top:10px;"><div class="ex-label">Usar para</div><div class="ex-text">Ventas mensuales de helado de enero a diciembre.</div></div>
+        </div>
+        <div class="card" style="border-top:4px solid #e8a020;">
+          <div class="card-num" style="color:#e8a020;">Circular</div>
+          <div class="card-title">Mostrar partes de un total</div>
+          <div class="card-body">Funciona si hay pocas categorías. No conviene con demasiadas secciones.</div>
+          <div class="ex-box ex-amber" style="margin-top:10px;"><div class="ex-label">Usar para</div><div class="ex-text">Distribución de canales de compra: local, delivery, app.</div></div>
+        </div>
+      </div>
+      <div class="tip-box">
+        <div class="tip-icon">📌</div>
+        <div class="tip-text"><strong>Regla práctica:</strong> barras para comparar, líneas para evolución, circular para composición. Si el gráfico requiere demasiada explicación, probablemente no es el gráfico correcto.</div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 19 — MINI SHARK TANK
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-full" id="s21">
+      <div class="slide-badge">19 / 22</div>
+      <div class="accent-bar" style="position:absolute;top:0;left:0;right:0;"></div>
+      <div class="full-label">Dinámica final · Mini Shark Tank</div>
+      <div class="full-title" style="margin-bottom: 18px;">Reunión con el CEO: tienen 3 minutos</div>
+      <div class="two-panel">
+        <div>
+          <div class="ex-box ex-neutral">
+            <div class="ex-label">Contexto</div>
+            <div class="ex-text">El CEO de Heladería Fresca solo tiene 3 minutos para escucharlos. No quiere ver metodología completa ni 20 gráficos. Quiere entender qué decisión tomar antes del invierno.</div>
+          </div>
+          <div class="ex-box ex-amber" style="margin-top:12px;">
+            <div class="ex-label">Datos disponibles</div>
+            <div class="ex-text" style="line-height:1.8;">68% no compra helado en invierno · 52% probaría sabores cálidos · 47% compraría helado + café · 38% reacciona a promociones de temporada.</div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="border-left:4px solid #1d7a5c; margin-bottom:12px;">
+            <div class="card-num" style="color:#1d7a5c;">Entregable oral</div>
+            <div class="card-body" style="line-height:1.8;">Cada grupo presenta:<br>1. Problema central<br>2. Principal conclusión<br>3. Recomendación prioritaria<br>4. Gráfico que usarían y por qué</div>
+          </div>
+          <div class="ex-box ex-good">
+            <div class="ex-label">Ejemplo de cierre ejecutivo</div>
+            <div class="ex-text">“El problema no es falta de interés por el producto, sino su asociación al verano. Recomendamos reposicionarlo como consumo invernal con sabores cálidos y combos con café.”</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 20 — CRITERIOS DE EVALUACIÓN
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-full" id="s22">
+      <div class="slide-badge">20 / 22</div>
+      <div class="accent-bar" style="position:absolute;top:0;left:0;right:0;"></div>
+      <div class="full-label">Cómo evaluar la presentación del grupo</div>
+      <div class="full-title" style="margin-bottom: 20px;">Criterios rápidos de feedback</div>
+      <div class="cards-grid col2">
+        <div class="card" style="border-left:4px solid #1a6bbd;"><div class="card-num" style="color:#1a6bbd;">Claridad</div><div class="card-body">¿Se entiende el problema y la recomendación en menos de 3 minutos?</div></div>
+        <div class="card" style="border-left:4px solid #e8a020;"><div class="card-num" style="color:#e8a020;">Conexión con datos</div><div class="card-body">¿La conclusión surge de evidencia o parece una opinión?</div></div>
+        <div class="card" style="border-left:4px solid #1d7a5c;"><div class="card-num" style="color:#1d7a5c;">Viabilidad</div><div class="card-body">¿La recomendación es concreta, aplicable y realista?</div></div>
+        <div class="card" style="border-left:4px solid #9b59b6;"><div class="card-num" style="color:#9b59b6;">Visualización</div><div class="card-body">¿El gráfico elegido ayuda a decidir o solo decora?</div></div>
+      </div>
+      <div class="tip-box"><div class="tip-icon">💡</div><div class="tip-text"><strong>Feedback sugerido:</strong> “El dato está claro, pero falta convertirlo en acción” o “la recomendación es buena, pero todavía no se apoya en una evidencia concreta”.</div></div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 19 — SÍNTESIS
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-full" id="s19">
+      <div class="slide-badge">21 / 22</div>
+      <div class="accent-bar" style="position:absolute;top:0;left:0;right:0;"></div>
+      <div class="full-label">Síntesis de la clase</div>
+      <div class="full-title" style="margin-bottom: 20px;">Las 5 ideas que te llevás hoy</div>
+      <div class="cards-grid col2" style="gap: 14px;">
+        <div class="card" style="border-top: 3px solid #1a6bbd;">
+          <div class="card-num" style="color:#1a6bbd; font-size:24px; letter-spacing:0; margin-bottom:4px;">1</div>
+          <div class="card-title">El informe es el producto</div>
+          <div class="card-body">La calidad de tu investigación se juzga por el informe. No importa qué tan bueno fue el trabajo de campo si el informe es malo.</div>
+        </div>
+        <div class="card" style="border-top: 3px solid #1d7a5c;">
+          <div class="card-num" style="color:#1d7a5c; font-size:24px; letter-spacing:0; margin-bottom:4px;">2</div>
+          <div class="card-title">El proceso tiene orden</div>
+          <div class="card-body">Análisis → Interpretación → Informe escrito → Presentación oral → Seguimiento. No se puede saltear pasos.</div>
+        </div>
+        <div class="card" style="border-top: 3px solid #e8a020;">
+          <div class="card-num" style="color:#e8a020; font-size:24px; letter-spacing:0; margin-bottom:4px;">3</div>
+          <div class="card-title">La estructura tiene 11 secciones</div>
+          <div class="card-body">Cada sección tiene un propósito. El resumen ejecutivo se escribe al final aunque va primero.</div>
+        </div>
+        <div class="card" style="border-top: 3px solid #9b59b6;">
+          <div class="card-num" style="color:#9b59b6; font-size:24px; letter-spacing:0; margin-bottom:4px;">4</div>
+          <div class="card-title">Breve, claro y sin sesgo</div>
+          <div class="card-body">Más páginas ≠ más calidad. El informe debe ser objetivo, con cifras, orientado al problema y sin opiniones del investigador.</div>
+        </div>
+      </div>
+      <div class="card" style="border-top: 3px solid #e74c3c; margin-top: 14px; background: #fff5f4;">
+        <div class="card-num" style="color:#e74c3c; font-size:24px; letter-spacing:0; margin-bottom:4px;">5</div>
+        <div class="card-title">Escrito y oral son complementarios</div>
+        <div class="card-body">El informe escrito es el documento de referencia. La presentación oral es el momento de convencer. Ambos son igualmente importantes.</div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SLIDE 20 — CIERRE
+    ══════════════════════════════════════════ -->
+    <div class="slide slide-cover" id="s20">
+      <div class="cover-logo">UADE</div>
+      <div class="cover-num">Investigación de Mercados — Clase 8</div>
+      <div class="cover-tag">Bibliografía</div>
+      <div class="cover-title" style="font-size: 40px; margin-bottom: 20px;">Gracias</div>
+      <div class="cover-sub" style="margin-bottom: 32px;">
+        MALHOTRA, N. K. <em>Investigación de mercados: conceptos esenciales.</em><br>
+        Capítulo 13. Buenos Aires: Pearson, 2016. ISBN 9786073235600.
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+        <span class="pill" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); font-size: 13px; padding: 7px 16px; border-radius: 20px;">Informe final</span>
+        <span class="pill" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); font-size: 13px; padding: 7px 16px; border-radius: 20px;">Formato escrito</span>
+        <span class="pill" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); font-size: 13px; padding: 7px 16px; border-radius: 20px;">Presentación oral</span>
+        <span class="pill" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); font-size: 13px; padding: 7px 16px; border-radius: 20px;">Redacción profesional</span>
+      </div>
+      <div style="font-size: 13px; color: rgba(255,255,255,0.35);">← → para navegar · F para pantalla completa</div>
+    </div>
+
+  </div><!-- end #stage -->
+</div><!-- end #app -->
+
+<!-- CONTROLS -->
+<div id="controls">
+  <button class="ctrl-btn" id="prevBtn" onclick="navigate(-1)" title="Anterior">&#8592;</button>
+  <div id="progressPills"></div>
+  <div id="slideCounter">1 / 22</div>
+  <button class="ctrl-btn" id="nextBtn" onclick="navigate(1)" title="Siguiente">&#8594;</button>
+</div>
+
+<div id="keyhint">← → Navegar &nbsp;|&nbsp; F Fullscreen</div>
+
+<script>
+// ── STATE ──
+const TOTAL = 22;
+let current = 1;
+
+// ── STRUCTURE DATA ──
+const structData = [
+  { n:1, name:'Carátula o portada', example:'Investigación de mercado: Percepciones de consumo invernal · Heladería Fresca S.A. · Enero 2025 · Equipo: Agencia Datos & Mercado' },
+  { n:2, name:'Carta de entrega', example:'"Estimado Sr. García: le adjunto el informe final del proyecto que nos encargó en octubre. Hemos cumplido con los objetivos acordados en tiempo y forma..."' },
+  { n:3, name:'Tabla de contenido', example:'Lista de todas las secciones con número de página + índice de tablas (T1, T2...) y gráficos (G1, G2...)' },
+  { n:4, name:'Resumen ejecutivo', example:'1-2 páginas máximo. Describe el problema, el enfoque, los principales resultados y las 3 recomendaciones prioritarias. Se escribe AL FINAL aunque va primero.' },
+  { n:5, name:'Definición del problema', example:'P. Marketing: "Heladería Fresca pierde un 40% de ventas en invierno." · P. Investigación: "¿Qué percepciones sobre el helado en invierno tiene el consumidor de CABA?"' },
+  { n:6, name:'Enfoque del problema', example:'H1: El helado es percibido como producto estacional. · H2: El precio es la segunda barrera. · Pregunta: ¿qué factores favorecerían el consumo invernal?' },
+  { n:7, name:'Diseño de la investigación', example:'Estudio cuantitativo descriptivo. Encuesta online de 15 preguntas. Muestreo probabilístico sistemático. n=400. Campo: octubre-noviembre 2024.' },
+  { n:8, name:'Análisis de los datos', example:'Plan: análisis descriptivo (frecuencias, medias) + tablas cruzadas por edad y zona. Software: SPSS 28. Nivel de confianza: 95%. Margen de error: ±4.9%' },
+  { n:9, name:'Resultados', example:'G1: ¿Consume helado en invierno? No: 68% / Sí: 32%. · G2: Razones de no consumo: percepción estacional 45%, frío 28%, precio 23%, dieta 4%.' },
+  { n:10, name:'Limitaciones y advertencias', example:'La muestra excluye zonas rurales. Resultados representativos de CABA y GBA únicamente. Período de campo: 6 semanas, lo que puede no capturar variaciones estacionales.' },
+  { n:11, name:'Conclusiones y recomendaciones', example:'1. Lanzar campaña "Invierno con sabor" antes del 1/6. · 2. Introducir 3 sabores cálidos (especiados, chocolates, café). · 3. Precio promocional invernal -15%.' },
+];
+
+// ── BUILD STRUCTURE GRID ──
+function buildStructGrid() {
+  const grid = document.getElementById('structGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  structData.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'struct-item';
+    div.innerHTML = `
+      <div class="struct-num">${item.n}</div>
+      <div style="flex:1;">
+        <div class="struct-name">${item.name}</div>
+        <div class="struct-example">${item.example}</div>
+      </div>
+      <div class="struct-arrow">▾</div>`;
+    div.onclick = function() {
+      const isOpen = this.classList.contains('open');
+      document.querySelectorAll('.struct-item.open').forEach(el => el.classList.remove('open'));
+      if (!isOpen) this.classList.add('open');
+    };
+    grid.appendChild(div);
+  });
+}
+
+// ── SCALE ──
+function scaleStage() {
+  const stage = document.getElementById('stage');
+  const W = 1280, H = 720;
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const scale = Math.min(vw / W, vh / H) * 0.96;
+  stage.style.width = W + 'px';
+  stage.style.height = H + 'px';
+  stage.style.transform = `scale(${scale})`;
+  const app = document.getElementById('app');
+  app.style.width = '100vw';
+  app.style.height = '100vh';
+}
+
+// ── NAVIGATION ──
+function showSlide(n) {
+  document.querySelectorAll('.slide').forEach((s, i) => {
+    s.classList.toggle('active', i + 1 === n);
+  });
+  document.getElementById('prevBtn').disabled = n === 1;
+  document.getElementById('nextBtn').disabled = n === TOTAL;
+  document.getElementById('slideCounter').textContent = n + ' / ' + TOTAL;
+  buildPills(n);
+  if (n === 9) buildStructGrid();
+}
+
+function navigate(dir) {
+  current = Math.max(1, Math.min(TOTAL, current + dir));
+  showSlide(current);
+}
+
+// ── PILLS ──
+function buildPills(active) {
+  const c = document.getElementById('progressPills');
+  c.innerHTML = '';
+  for (let i = 1; i <= TOTAL; i++) {
+    const p = document.createElement('div');
+    p.className = 'ppill' + (i === active ? ' active' : '') + (i < active ? ' done' : '');
+    p.style.width = (i === active ? '20px' : '6px');
+    p.onclick = () => { current = i; showSlide(i); };
+    c.appendChild(p);
+  }
+}
+
+// ── CHECKLIST ──
+function toggleCheckRow(el) {
+  el.classList.toggle('checked');
+  const box = el.querySelector('.check-box-el');
+  box.innerHTML = el.classList.contains('checked') ? '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
+}
+
+// ── QUIZ ──
+const quizAnswers = {
+  q1: { ok: '¡Correcto! El informe es el único producto tangible del proceso. Por eso es tan crítico presentarlo bien.', ko: 'No exactamente. El motivo clave es que el informe es lo único que queda en manos del cliente — el proceso de investigación no lo ven.' },
+  q2: { ok: '¡Muy bien! Conocer al lector y su necesidad de decisión es el primer paso para adaptar el informe correctamente.', ko: 'Cuidado. Más páginas no es más calidad — es falta de síntesis. Siempre hay que adaptar el nivel de detalle al lector.' },
+  q3: { ok: '¡Exacto! Son complementarios: el escrito es la referencia técnica, la oral es el momento de convencer al cliente.', ko: 'En realidad son complementarios. El escrito es el documento de referencia completo; la oral está diseñada para convencer, no para repetir todo.' },
+};
+
+function quiz(qid, btn, correct) {
+  const group = document.getElementById(qid);
+  group.querySelectorAll('.quiz-opt').forEach(b => {
+    b.classList.add(b === btn ? (correct ? 'correct' : 'wrong') : 'dim');
+  });
+  const fb = document.getElementById(qid + '-f');
+  fb.textContent = correct ? quizAnswers[qid].ok : quizAnswers[qid].ko;
+  fb.className = 'quiz-feedback show ' + (correct ? 'ok' : 'ko');
+}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); navigate(1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); navigate(-1); }
+  if (e.key === 'f' || e.key === 'F') {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  }
+});
+
+// ── TOUCH SWIPE ──
+let touchX = null;
+document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  if (touchX === null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 50) navigate(dx < 0 ? 1 : -1);
+  touchX = null;
+});
+
+// ── INIT ──
+window.addEventListener('resize', scaleStage);
+scaleStage();
+showSlide(1);
+</script>
+</body>
+</html>
